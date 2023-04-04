@@ -1,9 +1,8 @@
 import React from "react";
 import { Badge, Card } from "react-bootstrap";
 import LinkContainer from "react-router-bootstrap/LinkContainer";
-// import "./ProductPreview.css";
 
-const SimilarProduct = ({ _id, name, category, pictures }) => {
+function SimilarProduct({ _id, name, category, pictures }) {
   return (
     <LinkContainer
       to={`/product/${_id}`}
@@ -25,6 +24,6 @@ const SimilarProduct = ({ _id, name, category, pictures }) => {
       </Card>
     </LinkContainer>
   );
-};
+}
 
 export default SimilarProduct;

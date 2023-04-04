@@ -17,11 +17,14 @@ import Loading from "../components/Loading";
 import SimilarProduct from "../components/SimilarProduct";
 import "./productPage.css";
 import { LinkContainer } from "react-router-bootstrap";
+import { useAddToCartMutation } from "../services/appApi";
+import ToastMessage from "../components/ToastMessage";
 const ProductPage = () => {
   const { id } = useParams();
   const user = useSelector((state) => state.user);
   const [product, setProduct] = useState(null);
   const [similar, setSimilar] = useState(null);
+  const [addToCart, { isSuccess }] = useAddToCartMutation();
 
   const handleDragStart = (e) => e.preventDefault();
   useEffect(() => {
@@ -30,6 +33,7 @@ const ProductPage = () => {
       setSimilar(data.similar);
     });
   }, [id]);
+
   if (!product) {
     return <Loading />;
   }
@@ -89,13 +93,32 @@ const ProductPage = () => {
                 <option value="4">4</option>
                 <option value="5">5</option>
               </Form.Select>
-              <Button size="lg">Add to cart</Button>
+              <Button
+                size="lg"
+                onClick={() =>
+                  addToCart({
+                    userId: user._id,
+                    productId: id,
+                    price: product.price,
+                    image: product.pictures[0].url,
+                  })
+                }
+              >
+                Add to cart
+              </Button>
             </ButtonGroup>
           )}
           {user && user.isAdmin && (
             <LinkContainer to={`/product/${product._id}/edit`}>
               <Button size="lg">Edit Product</Button>
             </LinkContainer>
+          )}
+          {isSuccess && (
+            <ToastMessage
+              bg="info"
+              title="Added to Cart"
+              body={`${product.name} is in your cart`}
+            />
           )}
         </Col>
       </Row>
